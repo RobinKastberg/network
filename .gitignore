@@ -50,3 +50,4 @@ exercise/templates/exercise/question.html~
 *.html~
 *.py~
 *.sqlite3
+db.sqlite3
