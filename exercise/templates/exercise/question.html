@@ -5,9 +5,34 @@
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script>
+	function clear(color)
+	{
+		var canvas = document.getElementById('myCanvas');
+		ctx.fillStyle = color;
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+	}
+	function drawConnection()
+	{
+		var canvas = document.getElementById('myCanvas');
+		canvas.width = window.innerWidth;
+		canvas.height= 0.9*window.innerHeight;
+		ctx = canvas.getContext('2d');
+		ctx.fillStyle = "white";
+		x1 = $('#host1').offset().left+24+120
+		y1 = $('#host1').offset().top+24
+		x2 = $('#host2').offset().left+24+120
+		y2 = $('#host2').offset().top+24
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.beginPath();
+		ctx.moveTo(x1,y1);
+		ctx.lineTo(x2,y2);
+		ctx.stroke();
+	}
         // wait for the DOM to be loaded 
         $(document).ready(function() { 
             // bind 'myForm' and provide a simple callback function 
+		drawConnection()
+
 		$('#myForm').ajaxForm({
 			dataType: 'json',
 			success: showResponse
@@ -18,7 +43,17 @@
 					return false;    //<---- Add this line
 				}
 			});
-//		$('.host').draggable()
+		$('.host').draggable({drag: function() {
+			drawConnection()
+		}
+		})
+		$(".host").droppable({
+		    greedy: true,
+		    over: function(e,ui) {
+			ui.helper.offset(curOffset= prevOffset).trigger("mouseup");
+		    },
+		    tolerance: "touch"
+		});
         }); 
 	function showResponse(responseText, statusText, xhr, $form)  { 
 	    // for normal html responses, the first argument to the success callback 
@@ -31,45 +66,114 @@
 	    // if the ajaxForm method was passed an Options Object with the dataType 
 	    // property set to 'json' then the first argument to the success callback 
 		if(responseText['response'] == true) {
-		    $('body').css('background', 'green')
+		    $('#feedback').css('background', 'green')
 		    location.reload()
 		} else {
-		    $('body').css('background', 'red')
+		    $('#feedback').css('background', 'red')
 		    $('#feedback').text(responseText['response'])
 		}
 	    // is the json data object returned by the server 
 } 
 </script>
+<link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
 <style>
+body,div,table, tr, td {
+	font-family: 'VT323';
+	font-size: 20pt;
+}
+input {
+	font-family: 'VT323';
+	font-size: 1em;
+	font-weight: bold;
+	height:1em;
+	box-shadow: 0px;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+input:focus {
+	background: lightgreen;
+	border: 0;
+	outline: none;
+}
+div.host {
+	width: 300px;
+}
+td {
+	width: 120px;
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid black;
+}
+tr {
+	margin: 0;
+	padding: 0;
+}
+table {
+	margin: 0;
+	padding: 0;
+}
+input {
+	//width: 120px;
+	width: 100%;
+	border: 0px;
+}
 .host { 
-	background: #bbb;
+}
+table {
+	border: 1px solid black;
+	border-collapse: separate;
+	border-spacing: 0px;
+}
+canvas {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background:#aaa;
+	height: 90%;
+	z-index: -1;
+}
+img {
+	text-align: center;
+	margin: auto;
+	display: block;
+	padding-bottom: 5px;
 }
 </style>
 </head>
 <body>
+<form id='myForm' method='POST' action='validate'>
 {% load static %}
 {% load exercise_extras %}
 <div style='float: left' class='host' id='host1'>
 <img src='{% static 'exercise/Computer.svg'%}'>
-<form id='myForm' method='POST' action='validate'>
-<table>
+<table cellspacing=0>
 	<tr><td>IP:</td><td>{% str_or_input 'ip' ip %}</td></tr>
 	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask' netmask %}</td></tr>
 	<tr><td>Gateway:</td><td>{% str_or_input 'gateway' gateway %}</td></tr>
+	<tr><td>Nät-ID:</td><td>{% str_or_input 'netid' netid %}</td></tr>
 </table>
 </div>
-<div style='float: left; margin-left: 25%; position: absolute;' class='host' id='host2'>
+<div style='float: left; margin-left: 45%; position: absolute;' class='host' id='host2'>
 <img src='{% static 'exercise/Computer.svg'%}'>
 <table>
 	<tr><td>IP:</td><td>{% str_or_input 'ip2' ip2 %}</td></tr>
 	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask2' netmask2 %}</td></tr>
 	<tr><td>Gateway:</td><td>{% str_or_input 'gateway2' gateway2 %}</td></tr>
+	<tr><td>Nät-ID:</td><td>{% str_or_input 'netid2' netid2 %}</td></tr>
 </table>
 </div>
 {% csrf_token %}
 </form>
-<hr style='position: absolute; left: 50px; top: 25px;width: 22%; border: 1px solid black;' />
-<div id='feedback' style='position: relative;top: 33%'>
+<div id='feedback' style='position: relative;top: 90%;height: 10%'>
+	Level: {{ level }} | Streak: {{ streak }}
+	<a href='restart'>Börja om</a>
+	{% if request.session.level >= 6 %}
+	<a href='next'>Nästa nivå</a>
+	{% endif %}
 </div>
+<canvas id='myCanvas'>
+</canvas>
 </body>
 </html>

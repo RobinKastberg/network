@@ -49,3 +49,4 @@ Temporary Items
 exercise/templates/exercise/question.html~
 *.html~
 *.py~
+*.sqlite3
