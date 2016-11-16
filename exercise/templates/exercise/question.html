@@ -1,0 +1,75 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script>
+        // wait for the DOM to be loaded 
+        $(document).ready(function() { 
+            // bind 'myForm' and provide a simple callback function 
+		$('#myForm').ajaxForm({
+			dataType: 'json',
+			success: showResponse
+			}); 
+		$('input').keypress(function (e) {
+				if (e.which == 13) {
+				$('form').submit();
+					return false;    //<---- Add this line
+				}
+			});
+//		$('.host').draggable()
+        }); 
+	function showResponse(responseText, statusText, xhr, $form)  { 
+	    // for normal html responses, the first argument to the success callback 
+	    // is the XMLHttpRequest object's responseText property 
+	 
+	    // if the ajaxForm method was passed an Options Object with the dataType 
+	    // property set to 'xml' then the first argument to the success callback 
+	    // is the XMLHttpRequest object's responseXML property 
+	 
+	    // if the ajaxForm method was passed an Options Object with the dataType 
+	    // property set to 'json' then the first argument to the success callback 
+		if(responseText['response'] == true) {
+		    $('body').css('background', 'green')
+		    location.reload()
+		} else {
+		    $('body').css('background', 'red')
+		    $('#feedback').text(responseText['response'])
+		}
+	    // is the json data object returned by the server 
+} 
+</script>
+<style>
+.host { 
+	background: #bbb;
+}
+</style>
+</head>
+<body>
+{% load static %}
+{% load exercise_extras %}
+<div style='float: left' class='host' id='host1'>
+<img src='{% static 'exercise/Computer.svg'%}'>
+<form id='myForm' method='POST' action='validate'>
+<table>
+	<tr><td>IP:</td><td>{% str_or_input 'ip' ip %}</td></tr>
+	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask' netmask %}</td></tr>
+	<tr><td>Gateway:</td><td>{% str_or_input 'gateway' gateway %}</td></tr>
+</table>
+</div>
+<div style='float: left; margin-left: 25%; position: absolute;' class='host' id='host2'>
+<img src='{% static 'exercise/Computer.svg'%}'>
+<table>
+	<tr><td>IP:</td><td>{% str_or_input 'ip2' ip2 %}</td></tr>
+	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask2' netmask2 %}</td></tr>
+	<tr><td>Gateway:</td><td>{% str_or_input 'gateway2' gateway2 %}</td></tr>
+</table>
+</div>
+{% csrf_token %}
+</form>
+<hr style='position: absolute; left: 50px; top: 25px;width: 22%; border: 1px solid black;' />
+<div id='feedback' style='position: relative;top: 33%'>
+</div>
+</body>
+</html>
