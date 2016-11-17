@@ -10,14 +10,23 @@ levels = {
 		0: {'variable_netmask': False, 'subnetting': False, 'unknowns': 1},
 		1: {'variable_netmask': False, 'subnetting': False, 'unknowns': 2},
 		2: {'variable_netmask': False, 'subnetting': False, 'unknowns': 3},
-		3: {'variable_netmask': True,  'subnetting': False, 'unknowns': 1},
-		4: {'variable_netmask': True,  'subnetting': False, 'unknowns': 2},
-		5: {'variable_netmask': True,  'subnetting': False, 'unknowns': 3},
-		6: {'variable_netmask': True,  'subnetting': True,  'unknowns': 1},
-		7: {'variable_netmask': True,  'subnetting': True,  'unknowns': 2},
-		8: {'variable_netmask': True,  'subnetting': True,  'unknowns': 3},
-		9: {'variable_netmask': True,  'subnetting': True,  'unknowns': 4},
-		10:{'variable_netmask': True,  'subnetting': True,  'unknowns': 5},
+                3: {'variable_netmask': False, 'subnetting': False, 'unknowns': 4},
+		4: {'variable_netmask': True,  'subnetting': False, 'unknowns': 1},
+		5: {'variable_netmask': True,  'subnetting': False, 'unknowns': 2},
+		6: {'variable_netmask': True,  'subnetting': False, 'unknowns': 3},
+                7: {'variable_netmask': True,  'subnetting': False, 'unknowns': 4},
+                8: {'variable_netmask': True,  'subnetting': False, 'unknowns': 5},
+                9: {'variable_netmask': True,  'subnetting': False, 'unknowns': 6},
+                10: {'variable_netmask': True,  'subnetting': False, 'unknowns': 7},
+                11: {'variable_netmask': True,  'subnetting': False, 'unknowns': 8},
+		12: {'variable_netmask': True,  'subnetting': True,  'unknowns': 1},
+		13: {'variable_netmask': True,  'subnetting': True,  'unknowns': 2},
+		14: {'variable_netmask': True,  'subnetting': True,  'unknowns': 3},
+		15: {'variable_netmask': True,  'subnetting': True,  'unknowns': 4},
+		16:{'variable_netmask': True,  'subnetting': True,  'unknowns': 5},
+                17:{'variable_netmask': True,  'subnetting': True,  'unknowns': 6},
+                18:{'variable_netmask': True,  'subnetting': True,  'unknowns': 7},
+                19:{'variable_netmask': True,  'subnetting': True,  'unknowns': 8},
 		}
 # Create your views here.
 def ipstr(ip):
@@ -67,11 +76,11 @@ def check(dct):
 		return "Gateway måste ligga på det lokala nätverket"
 	if netid != netid2:
 		return "Nät-ID måste vara samma."
-	try:
-		ipaddress.IPv4Network((ip & netmask, netmask))
-		ipaddress.IPv4Network((ip2 & netmask2, netmask2))
-	except:
-		return "Något är fel med nätmask eller ip-addressen"
+	#try:
+		#ipaddress.IPv4Network((ip & netmask, netmask))
+		#ipaddress.IPv4Network((ip2 & netmask2, netmask2))
+	#except:
+		#return "Något är fel med nätmask eller ip-addressen"
 	return True
 def generate_netmask(variable=False, subnet=False):
 	if variable:
@@ -109,8 +118,8 @@ def index(request):
 	for x in keys:
 		values.append(ipstr(locals()[x]))
 
-	if not check(dict(zip(allkeys, allvalues))) == True:
-		return index(request)
+	#if not check(dict(zip(allkeys, allvalues))) == True:
+	#	return index(request)
 	return render(request, "exercise/question.html", {**dict(zip(keys, values)),**{'streak': request.session['streak'], 'level': request.session['level']}})
 def restart(request):
 	if 'level' in request.session:
@@ -118,6 +127,8 @@ def restart(request):
 	if 'streak' in request.session:
 		del request.session['streak']
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+def next(request):
+        return HttpResponse("<body bgcolor=green><b style='color: white'>Grattis! You made it. Ajax bjuder dig biltemakorv om du har alla rätt på hans prov.")
 def validate(request):
 	works = ""
 	try:

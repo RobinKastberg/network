@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script>
@@ -111,10 +111,10 @@ input:focus {
 	outline: none;
 }
 div.host {
-	width: 300px;
+	width: 360px;
 }
 td {
-	width: 120px;
+	width: 180px;
 	margin: 0;
 	padding: 0;
 	border-bottom: 1px solid black;
@@ -183,7 +183,7 @@ img.computer {
 	{% for i in streak|times %} <img class='star' src='{% static 'exercise/Star.svg' %}'> {% endfor %}
 	Level: {{ level }} 
 	<a href='restart'>Börja om</a>
-	{% if request.session.level >= 6 %}
+	{% if request.session.level >= 9 %}
 	<a href='next'>Nästa nivå</a>
 	{% endif %}
 </div>
