@@ -1,4 +1,4 @@
-﻿<!-- question.html -->
+﻿<!-- question2.html -->
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -21,34 +21,53 @@
 		ctx.fillStyle = "white";
 		x1 = $('#host1').offset().left+24+170
 		y1 = $('#host1').offset().top+24
-		x2 = $('#host2').offset().left+24+170
-		y2 = $('#host2').offset().top+24
+
+		x2 = $('#router').offset().left+170
+		y2 = $('#router').offset().top+24
+		x3 = $('#router').offset().left+64+170
+		y3 = $('#router').offset().top+24
+
+		x4 = $('#host2').offset().left+24+170
+		y4 = $('#host2').offset().top+24
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		ctx.beginPath();
 		ctx.moveTo(x1,y1);
 		ctx.lineTo(x2,y2);
+		ctx.moveTo(x3,y3);
+		ctx.lineTo(x4,y4);
 		ctx.stroke();
 	}
         // wait for the DOM to be loaded 
         $(document).ready(function() { 
             // bind 'myForm' and provide a simple callback function 
 		drawConnection()
-
+		$($("input")[0]).focus();
 		$('#myForm').ajaxForm({
 			dataType: 'json',
 			success: showResponse
 			}); 
 		$('input').keypress(function (e) {
 				if (e.which == 13) {
-				$('form').submit();
-					return false;    //<---- Add this line
+					var submit = true
+					$('input[type=text]').each (function() {
+						if($(this).val() == "" && submit == true)
+						{
+							$(this).focus();
+							submit = false
+						}
+					})
+					if(submit) {
+						$('form').submit();
+						return false;    //<---- Add this line
+					}
 				}
 			});
 		$('.host').draggable({drag: function() {
 			drawConnection()
+			prevOffset = $(this).offset()
 		}
 		})
-		$(".host").droppable({
+		$(".host, .router").droppable({
 		    greedy: true,
 		    over: function(e,ui) {
 			ui.helper.offset(curOffset= prevOffset).trigger("mouseup");
@@ -56,7 +75,7 @@
 		    tolerance: "touch"
 		});
 		$( window ).resize(function() {
-			drawConnections();
+			drawConnection();
 		});
         }); 
 	function showResponse(responseText, statusText, xhr, $form)  { 
@@ -111,7 +130,7 @@ input:focus {
 	border: 0;
 	outline: none;
 }
-div.host {
+div.host, div.router {
 	width: 360px;
 }
 td {
@@ -149,6 +168,7 @@ canvas {
 	z-index: -1;
 }
 img.computer {
+	width: 64px;
 	text-align: center;
 	margin: auto;
 	display: block;
@@ -157,7 +177,7 @@ img.computer {
 </style>
 </head>
 <body>
-<form id='myForm' method='POST' action='validate' autocomplete='off'>
+<form id='myForm' method='POST' action='validate2' autocomplete='off'>
 {% load static %}
 {% load exercise_extras %}
 <div style='float: left' class='host' id='host1'>
@@ -169,7 +189,13 @@ img.computer {
 	<tr><td>Nät-ID:</td><td>{% str_or_input 'netid' netid %}</td></tr>
 </table>
 </div>
-<div style='float: left; margin-left: 45%; position: absolute;' class='host' id='host2'>
+<div style='float: left; margin-left: 30%; position: absolute;' class='router' id='router'>
+<img class='computer' src='{% static 'exercise/Router.png'%}'>
+<table style='text-align: center'>
+	<tr><td style='border-right: 1px solid black'>{% str_or_input 'router_left' router_left %}</td><td>{% str_or_input 'router_right' router_right %}</td></tr>
+</table>
+</div>
+<div style='float: left; margin-left: 60%; position: absolute;' class='host' id='host2'>
 <img class='computer' src='{% static 'exercise/Computer.svg'%}'>
 <table>
 	<tr><td>IP:</td><td>{% str_or_input 'ip2' ip2 %}</td></tr>
@@ -182,7 +208,7 @@ img.computer {
 </form>
 <div id='feedback' style='position: relative;top: 80%;height: 15%;background: #aaa;'>
 	{% for i in streak|times %} <img class='star' src='{% static 'exercise/Star.svg' %}'> {% endfor %}
-	Level: {{ level }} 
+	Level: {{ level2 }} 
 	<a href='restart'>Börja om</a>
 	{% if request.session.level >= 9 %}
 	<a href='next'>Nästa nivå</a>
