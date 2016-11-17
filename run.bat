@@ -1,1 +1,2 @@
-start manage.py runserver 0.0.0.0:8080
+py manage.py runserver 0.0.0.0:8080
+pause
