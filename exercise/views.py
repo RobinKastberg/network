@@ -53,6 +53,10 @@ def check(dct):
 		return "IP-addresser får inte sluta på 0 eller 255"
 	if ip2 & 0xff == 0 or ip2 & 0xff == 0xff:
 		return "IP-addresser får inte sluta på 0 eller 255"
+	if (ip>>24) & 0xff == 0 or (ip>>24) & 0xff == 0xff:
+		return "IP-addresser får inte börja på 0 eller 255"
+	if (ip2>>24) & 0xff == 0 or (ip2>>24) & 0xff == 0xff:
+		return "IP-addresser får inte börja på 0 eller 255"
 	if (ip & netid) != netid:
 		return "Fel Nät-ID"
 	if (ip2 & netid2) != netid2:

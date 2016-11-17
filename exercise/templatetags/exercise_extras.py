@@ -9,3 +9,7 @@ def str_or_input(key, value):
 		return mark_safe("<input type='hidden' name='"+key+"' value='"+value+"' />" + value)
 	else:
 		return mark_safe('<input type="text" name="'+key+'"/>')
+
+@register.filter(name='times') 
+def times(number):
+    return range(number)

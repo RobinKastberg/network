@@ -15,7 +15,7 @@
 	{
 		var canvas = document.getElementById('myCanvas');
 		canvas.width = window.innerWidth;
-		canvas.height= 0.9*window.innerHeight;
+		canvas.height= 0.8*window.innerHeight;
 		ctx = canvas.getContext('2d');
 		ctx.fillStyle = "white";
 		x1 = $('#host1').offset().left+24+120
@@ -54,6 +54,9 @@
 		    },
 		    tolerance: "touch"
 		});
+		$( window ).resize(function() {
+			drawConnections();
+		});
         }); 
 	function showResponse(responseText, statusText, xhr, $form)  { 
 	    // for normal html responses, the first argument to the success callback 
@@ -81,6 +84,11 @@ body,div,table, tr, td {
 	font-family: 'VT323';
 	font-size: 20pt;
 }
+img.star {
+	width: 40px;
+	position:relative;
+	top: 13px;
+}
 input {
 	font-family: 'VT323';
 	font-size: 1em;
@@ -91,6 +99,11 @@ input {
 	padding: 0;
 	margin: 0;
 	border: 0;
+}
+div#feedback {
+	vertical-align: center;
+	text-align: right;
+	padding-right: 20px;
 }
 input:focus {
 	background: lightgreen;
@@ -131,10 +144,10 @@ canvas {
 	top: 0px;
 	left: 0px;
 	background:#aaa;
-	height: 90%;
+	height: 80%;
 	z-index: -1;
 }
-img {
+img.computer {
 	text-align: center;
 	margin: auto;
 	display: block;
@@ -143,11 +156,11 @@ img {
 </style>
 </head>
 <body>
-<form id='myForm' method='POST' action='validate'>
+<form id='myForm' method='POST' action='validate' autocomplete='off'>
 {% load static %}
 {% load exercise_extras %}
 <div style='float: left' class='host' id='host1'>
-<img src='{% static 'exercise/Computer.svg'%}'>
+<img class='computer' src='{% static 'exercise/Computer.svg'%}'>
 <table cellspacing=0>
 	<tr><td>IP:</td><td>{% str_or_input 'ip' ip %}</td></tr>
 	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask' netmask %}</td></tr>
@@ -156,7 +169,7 @@ img {
 </table>
 </div>
 <div style='float: left; margin-left: 45%; position: absolute;' class='host' id='host2'>
-<img src='{% static 'exercise/Computer.svg'%}'>
+<img class='computer' src='{% static 'exercise/Computer.svg'%}'>
 <table>
 	<tr><td>IP:</td><td>{% str_or_input 'ip2' ip2 %}</td></tr>
 	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask2' netmask2 %}</td></tr>
@@ -166,8 +179,9 @@ img {
 </div>
 {% csrf_token %}
 </form>
-<div id='feedback' style='position: relative;top: 90%;height: 10%'>
-	Level: {{ level }} | Streak: {{ streak }}
+<div id='feedback' style='position: relative;top: 80%;height: 15%;background: #aaa;'>
+	{% for i in streak|times %} <img class='star' src='{% static 'exercise/Star.svg' %}'> {% endfor %}
+	Level: {{ level }} 
 	<a href='restart'>Börja om</a>
 	{% if request.session.level >= 6 %}
 	<a href='next'>Nästa nivå</a>
