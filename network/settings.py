@@ -23,15 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '7(upf-t^(qt*(n(ai5$m8$5*wiks@kc8%mxn8c6d-y1o9*)r-t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['172.16.0.1', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['172.16.0.1', 'localhost', '127.0.0.1', 'itgwebb.se']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-	'exercise.apps.ExerciseConfig',
+    'exercise',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -118,4 +118,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/robin/exercise/static/'

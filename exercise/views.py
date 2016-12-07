@@ -1,10 +1,17 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.sessions.models import Session
 from django.utils.html import escape
 import random
 import logging
-import ipaddress
+import json
+
+def merge_two_dicts(x, y):
+    '''Given two dicts, merge them into a new dict as a shallow copy.'''
+    z = x.copy()
+    z.update(y)
+    return z
 
 logger = logging.getLogger(__name__)
 
@@ -191,7 +198,7 @@ def index(request):
 
 	if not check(dict(zip(allkeys, allvalues))) == True:
 		return index(request)
-	return render(request, "exercise/question.html", {**dict(zip(keys, values)),**{'streak': request.session['streak'], 'level': request.session['level']}})
+	return render(request, "exercise/question.html", merge_two_dicts(dict(zip(keys, values)),{'streak': request.session['streak'], 'level': request.session['level']}))
 
 
 def stage2(request):
@@ -227,7 +234,7 @@ def stage2(request):
 	if not check_two_networks(dict(zip(allkeys, allvalues))) == True:
 		logger.error(check_two_networks(dict(zip(allkeys, allvalues))))
 		return stage2(request)
-	return render(request, "exercise/question2.html", {**dict(zip(keys, values)),**{'streak': request.session['streak'], 'level2': request.session['level2']}} )
+	return render(request, "exercise/question2.html", merge_two_dicts(dict(zip(keys, values)),{'streak': request.session['streak'], 'level2': request.session['level2']}))
 
 
 def restart(request):
@@ -250,7 +257,8 @@ def validate(request):
 			request.session['level'] += 1
 	else:
 		request.session['streak'] = 0
-	return JsonResponse({'response':works})
+	#return JsonResponse({'response':works})
+	return HttpResponse(json.dumps({'response': works}), content_type='application/json')
 def leader(request):
         ret = ""
         scores = []
@@ -287,4 +295,4 @@ def validate2(request):
 			request.session['level2'] += 1
 	else:
 		request.session['streak'] = 0
-	return JsonResponse({'response':works})
+	return HttpResponse(json.dumps({'response': works}), content_type='application/json')

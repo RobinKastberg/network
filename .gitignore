@@ -53,3 +53,9 @@ exercise/templates/exercise/question.html~
 db.sqlite3
 db.sqlite3
 *.sqlite3
+
+*.htaccess~
+.htaccess.swo
+*.swp
+django.cgi~
+htaccess~
