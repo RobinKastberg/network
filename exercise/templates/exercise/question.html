@@ -1,4 +1,4 @@
-﻿<!-- question.html -->
+<!-- question.html -->
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -40,6 +40,7 @@
 			}); 
 		$('input').keypress(function (e) {
 				if (e.which == 13) {
+				$('input').unbind('keypress');
 				$('form').submit();
 					return false;    //<---- Add this line
 				}
@@ -75,6 +76,15 @@
 		} else {
 		    $('#feedback').css('background', 'red')
 		    $('#feedback').text(responseText['response'])
+
+$('input').keypress(function (e) {
+				if (e.which == 13) {
+				$('input').unbind('keypress');
+				$('form').submit();
+					return false;    //<---- Add this line
+				}
+			});
+
 		}
 	    // is the json data object returned by the server 
 } 
@@ -166,7 +176,7 @@ img.computer {
 	<tr><td>IP:</td><td>{% str_or_input 'ip' ip %}</td></tr>
 	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask' netmask %}</td></tr>
 	<tr><td>Gateway:</td><td>{% str_or_input 'gateway' gateway %}</td></tr>
-	<tr><td>Nät-ID:</td><td>{% str_or_input 'netid' netid %}</td></tr>
+	<tr><td>N&auml;t-ID:</td><td>{% str_or_input 'netid' netid %}</td></tr>
 </table>
 </div>
 <div style='float: left; margin-left: 45%; position: absolute;' class='host' id='host2'>
@@ -175,7 +185,7 @@ img.computer {
 	<tr><td>IP:</td><td>{% str_or_input 'ip2' ip2 %}</td></tr>
 	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask2' netmask2 %}</td></tr>
 	<tr><td>Gateway:</td><td>{% str_or_input 'gateway2' gateway2 %}</td></tr>
-	<tr><td>Nät-ID:</td><td>{% str_or_input 'netid2' netid2 %}</td></tr>
+	<tr><td>N&auml;t-ID:</td><td>{% str_or_input 'netid2' netid2 %}</td></tr>
 </table>
 </div>
 {% csrf_token %}
@@ -183,9 +193,9 @@ img.computer {
 <div id='feedback' style='position: relative;top: 80%;height: 15%;background: #aaa;'>
 	{% for i in streak|times %} <img class='star' src='{% static 'exercise/Star.svg' %}'> {% endfor %}
 	Level: {{ level }} 
-	<a href='restart'>Börja om</a>
+	<a href='restart'>B&ouml;rja om</a>
 	{% if request.session.level >= 9 %}
-	<a href='next'>Nästa nivå</a>
+	<a href='stage2'>N&auml;sta niv&aring;</a>
 	{% endif %}
 </div>
 <canvas id='myCanvas'>

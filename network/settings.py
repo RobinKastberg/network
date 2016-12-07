@@ -25,7 +25,7 @@ SECRET_KEY = '7(upf-t^(qt*(n(ai5$m8$5*wiks@kc8%mxn8c6d-y1o9*)r-t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['172.16.0.1', 'localhost', '127.0.0.1']
 
 
 # Application definition

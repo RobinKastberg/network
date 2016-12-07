@@ -1,0 +1,45 @@
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+<style>
+body,div,table, tr, td {
+	font-family: 'VT323';
+	font-size: 20pt;
+	width: 400px;
+}
+td {
+	width: 180px;
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid black;
+}
+tr {
+	margin: 0;
+	padding: 0;
+}
+table {
+	margin: 0;
+	padding: 0;
+}
+
+.host { 
+}
+table {
+	border: 1px solid black;
+	border-collapse: separate;
+	border-spacing: 0px;
+}
+</style>
+</head>
+<body>
+<form method='GET' action='set'>
+Namn: <input type='text' name='name' />
+</form>
+<table>
+{% for s in scores %}
+	
+	<tr {% if s.0 == request.session.name %}style='background: lightgreen'{% endif %}><td>{{s.0|slice:":10"}}</td><td>{{s.1}}</td></tr>
+{% endfor %}
+</table>
+</body>
+</html>

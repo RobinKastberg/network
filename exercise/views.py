@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.contrib.sessions.models import Session
+from django.utils.html import escape
 import random
 import logging
 import ipaddress
@@ -206,7 +208,7 @@ def stage2(request):
 	netmask = generate_netmask(level['variable_netmask'], level['subnetting'])
 	netmask2 = generate_netmask(level['variable_netmask'], level['subnetting'])
 	ip = (router_left & netmask) | (~netmask & random.randrange(2**32))
-	ip2 = (router_right & netmask2) | (~netmask & random.randrange(2**32))
+	ip2 = (router_right & netmask2) | (~netmask2 & random.randrange(2**32))
 	gateway = router_left
 	gateway2 = router_right
 	netid = (router_left & netmask)
@@ -249,7 +251,28 @@ def validate(request):
 	else:
 		request.session['streak'] = 0
 	return JsonResponse({'response':works})
-
+def leader(request):
+        ret = ""
+        scores = []
+        for s in Session.objects.filter():
+                s = s.get_decoded()
+                score = 0
+                score = 1000*s.get('level',0)
+                score += 2000*s.get('level2',0)
+                score += 100*s.get('streak',0)
+                name = s.get('name','Anonymous Coward')
+                scores.append((name,score))
+        scores = sorted(scores,key=lambda x: x[1],reverse=True)
+      
+        for s in scores:
+                ret += s[0] + ": "+str(s[1]) + "<br/>"
+        return render(request, "exercise/leader.html", {'scores': scores[:20]})
+def set_name(request):
+        if 'name' in request.GET:
+                request.session['name'] = request.GET['name']
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+                return HttpResponse("Du gör fel")
 def validate2(request):
 	works = ""
 	try:

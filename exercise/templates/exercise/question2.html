@@ -1,4 +1,4 @@
-﻿<!-- question2.html -->
+<!-- question2.html -->
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -48,6 +48,8 @@
 			}); 
 		$('input').keypress(function (e) {
 				if (e.which == 13) {
+									
+
 					var submit = true
 					$('input[type=text]').each (function() {
 						if($(this).val() == "" && submit == true)
@@ -57,6 +59,7 @@
 						}
 					})
 					if(submit) {
+						$('input').unbind('keypress');
 						$('form').submit();
 						return false;    //<---- Add this line
 					}
@@ -94,6 +97,27 @@
 		} else {
 		    $('#feedback').css('background', 'red')
 		    $('#feedback').text(responseText['response'])
+
+		$('input').keypress(function (e) {
+				if (e.which == 13) {
+									
+
+					var submit = true
+					$('input[type=text]').each (function() {
+						if($(this).val() == "" && submit == true)
+						{
+							$(this).focus();
+							submit = false
+						}
+					})
+					if(submit) {
+						$('input').unbind('keypress');
+						$('form').submit();
+						return false;    //<---- Add this line
+					}
+				}
+			});
+
 		}
 	    // is the json data object returned by the server 
 } 
@@ -186,7 +210,7 @@ img.computer {
 	<tr><td>IP:</td><td>{% str_or_input 'ip' ip %}</td></tr>
 	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask' netmask %}</td></tr>
 	<tr><td>Gateway:</td><td>{% str_or_input 'gateway' gateway %}</td></tr>
-	<tr><td>Nät-ID:</td><td>{% str_or_input 'netid' netid %}</td></tr>
+	<tr><td>N&auml;t-ID:</td><td>{% str_or_input 'netid' netid %}</td></tr>
 </table>
 </div>
 <div style='float: left; margin-left: 30%; position: absolute;' class='router' id='router'>
@@ -201,18 +225,22 @@ img.computer {
 	<tr><td>IP:</td><td>{% str_or_input 'ip2' ip2 %}</td></tr>
 	<tr><td>N&auml;tmask:</td><td>{% str_or_input 'netmask2' netmask2 %}</td></tr>
 	<tr><td>Gateway:</td><td>{% str_or_input 'gateway2' gateway2 %}</td></tr>
-	<tr><td>Nät-ID:</td><td>{% str_or_input 'netid2' netid2 %}</td></tr>
+	<tr><td>N&auml;t-ID:</td><td>{% str_or_input 'netid2' netid2 %}</td></tr>
 </table>
 </div>
 {% csrf_token %}
 </form>
-<div id='feedback' style='position: relative;top: 80%;height: 15%;background: #aaa;'>
+<div id='feedback' style='position: relative;top: 80%;height: 15%;background: #aaa; margin-right: 20%'>
 	{% for i in streak|times %} <img class='star' src='{% static 'exercise/Star.svg' %}'> {% endfor %}
 	Level: {{ level2 }} 
-	<a href='restart'>Börja om</a>
+	<a href='restart'>B&ouml;rja om</a>
 	{% if request.session.level >= 9 %}
-	<a href='next'>Nästa nivå</a>
+	<a href='next'>N&auml;sta niv&aring;</a>
 	{% endif %}
+</div>
+<div style='position: absolute; right: 0; width: 20%; top: 0;height: 100%; margin: 0; padding: 0;'>
+<iframe src='leader' style='height: 100%; width: 100%'>
+</iframe>
 </div>
 <canvas id='myCanvas'>
 </canvas>
